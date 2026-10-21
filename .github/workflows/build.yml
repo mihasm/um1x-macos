@@ -1,0 +1,21 @@
+name: build
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  build:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build (universal)
+        run: make
+      - name: Unit tests
+        run: make test
+      - name: Check the binary
+        run: |
+          lipo -info build/um1x-midi-driver
+          otool -L build/um1x-midi-driver
+          build/um1x-midi-driver --version
+          build/um1x-midi-driver devices
